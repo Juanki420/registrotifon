@@ -7,7 +7,7 @@
     <script>
         let contadorClicks = 0;
         let ventanasAbiertas = [];
-        
+
         const mensajes = [
             "¡Otra ventana mágica aparece! ✨",
             "¿Te atreves a seguir? 🎭",
@@ -23,7 +23,7 @@
 
         function cerrarTodasLasVentanas() {
             ventanasAbiertas.forEach(ventana => {
-                if (!ventana.closed) {
+                if (ventana && !ventana.closed) {
                     ventana.close();
                 }
             });
@@ -32,130 +32,137 @@
 
         function abrirVentana() {
             contadorClicks++;
-            
-            if(contadorClicks >= 100) {
-                // Primero cerramos todas las ventanas anteriores
-                cerrarTodasLasVentanas();
 
-                // Luego abrimos la ventana final
-                const ventanaFinal = window.open('', '_blank', 'width=600,height=400');
-                ventanaFinal.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>¡FELICIDADES!</title>
-                        <style>
-                            body {
-                                margin: 0;
-                                height: 100vh;
-                                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                font-family: 'Segoe UI', sans-serif;
-                                color: white;
-                                text-align: center;
-                                overflow: hidden;
-                            }
-                            .mensaje {
-                                animation: celebracion 1s ease-out;
-                                padding: 2rem;
-                                background: rgba(255, 255, 255, 0.1);
-                                border-radius: 20px;
-                                backdrop-filter: blur(10px);
-                            }
-                            h1 { 
-                                font-size: 3rem;
-                                margin: 0 0 1rem 0;
-                            }
-                            @keyframes celebracion {
-                                0% { transform: scale(0) rotate(0deg); }
-                                50% { transform: scale(1.2) rotate(180deg); }
-                                100% { transform: scale(1) rotate(360deg); }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="mensaje">
-                            <h1>🎉 ¡ENHORABUENA CRACK! 🎉</h1>
-                            <p style="font-size: 1.5rem;">Ahora... ¡A TRABAJAR! 💪</p>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                ventanaFinal.document.close();
+            if (contadorClicks >= 100) {
+                cerrarTodasLasVentanas();
+                const ventanaFinal = window.open('', '_blank', 'width=600,height=400,noopener,noreferrer');
+                if (!ventanaFinal) {
+                    alert("¡Tu navegador bloqueó la ventana emergente! Activa las ventanas emergentes.");
+                    return;
+                }
+                setTimeout(() => {
+                    ventanaFinal.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>¡FELICIDADES!</title>
+                            <style>
+                                body {
+                                    margin: 0;
+                                    height: 100vh;
+                                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    font-family: 'Segoe UI', sans-serif;
+                                    color: white;
+                                    text-align: center;
+                                    overflow: hidden;
+                                }
+                                .mensaje {
+                                    animation: celebracion 1s ease-out;
+                                    padding: 2rem;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border-radius: 20px;
+                                    backdrop-filter: blur(10px);
+                                }
+                                h1 { font-size: 3rem; margin: 0 0 1rem 0; }
+                                @keyframes celebracion {
+                                    0% { transform: scale(0) rotate(0deg); }
+                                    50% { transform: scale(1.2) rotate(180deg); }
+                                    100% { transform: scale(1) rotate(360deg); }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="mensaje">
+                                <h1>🎉 ¡ENHORABUENA CRACK! 🎉</h1>
+                                <p style="font-size: 1.5rem;">Ahora... ¡A TRABAJAR! 💪</p>
+                            </div>
+                        </body>
+                        </html>
+                    `);
+                    ventanaFinal.document.close();
+                }, 100);
                 return;
             }
 
             const mensaje = mensajes[Math.floor(Math.random() * mensajes.length)];
-            const ventana = window.open('', '_blank', 'width=400,height=300');
-            // Guardamos la referencia de la ventana
+            const ventana = window.open('', '_blank', 'width=400,height=300,noopener,noreferrer');
+
+            if (!ventana) {
+                alert("¡Tu navegador bloqueó la ventana emergente! Activa las ventanas emergentes.");
+                return;
+            }
+
             ventanasAbiertas.push(ventana);
-            
-            ventana.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>${mensaje}</title>
-                    <style>
-                        body {
-                            font-family: 'Segoe UI', sans-serif;
-                            margin: 0;
-                            height: 100vh;
-                            background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                            align-items: center;
-                            color: white;
-                            text-align: center;
-                        }
-                        .container {
-                            background: rgba(255, 255, 255, 0.1);
-                            padding: 2rem;
-                            border-radius: 20px;
-                            backdrop-filter: blur(10px);
-                        }
-                        h1 {
-                            font-size: 1.5rem;
-                            margin: 0 0 1rem 0;
-                            animation: float 3s infinite;
-                        }
-                        @keyframes float {
-                            0%, 100% { transform: translateY(0); }
-                            50% { transform: translateY(-10px); }
-                        }
-                        button {
-                            padding: 15px 30px;
-                            font-size: 1.2rem;
-                            cursor: pointer;
-                            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-                            color: white;
-                            border: none;
-                            border-radius: 50px;
-                            transition: all 0.3s;
-                        }
-                        button:hover {
-                            transform: translateY(-3px);
-                            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-                        }
-                        .counter {
-                            margin-top: 1rem;
-                            font-size: 1.2rem;
-                            opacity: 0.8;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1>${mensaje}</h1>
-                        <button onclick="window.opener.abrirVentana()">¡Continúa el viaje!</button>
-                        <div class="counter">Ventanas abiertas: ${contadorClicks}/100</div>
-                    </div>
-                </body>
-                </html>
-            `);
-            ventana.document.close();
+
+            setTimeout(() => {
+                ventana.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${mensaje}</title>
+                        <style>
+                            body {
+                                font-family: 'Segoe UI', sans-serif;
+                                margin: 0;
+                                height: 100vh;
+                                background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                color: white;
+                                text-align: center;
+                            }
+                            .container {
+                                background: rgba(255, 255, 255, 0.1);
+                                padding: 2rem;
+                                border-radius: 20px;
+                                backdrop-filter: blur(10px);
+                            }
+                            h1 {
+                                font-size: 1.5rem;
+                                margin: 0 0 1rem 0;
+                                animation: float 3s infinite;
+                            }
+                            @keyframes float {
+                                0%, 100% { transform: translateY(0); }
+                                50% { transform: translateY(-10px); }
+                            }
+                            button {
+                                padding: 15px 30px;
+                                font-size: 1.2rem;
+                                cursor: pointer;
+                                background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+                                color: white;
+                                border: none;
+                                border-radius: 50px;
+                                transition: all 0.3s;
+                            }
+                            button:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                            }
+                            .counter {
+                                margin-top: 1rem;
+                                font-size: 1.2rem;
+                                opacity: 0.8;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <h1>${mensaje}</h1>
+                            <button onclick="window.opener.abrirVentana()">¡Continúa el viaje!</button>
+                            <div class="counter">Ventanas abiertas: ${contadorClicks}/100</div>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                ventana.document.close();
+            }, 100);
         }
     </script>
     <style>
@@ -174,7 +181,6 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 2rem;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
         }
         h1 {
             font-size: 2.5rem;
@@ -194,10 +200,6 @@
             border: none;
             border-radius: 50px;
             transition: all 0.3s;
-        }
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
