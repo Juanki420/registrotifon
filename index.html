@@ -24,9 +24,9 @@
         h1 {
             color: #333;
         }
-        #levelCounter {
+        #levelCounter, #highScore {
             font-size: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #555;
         }
         button {
@@ -49,10 +49,15 @@
     <script>
         let level = 1;
         let incorrectAttempts = 0;
+        let highScore = localStorage.getItem('highScore') || 1;
  
         function nextLevel() {
             level++;
             incorrectAttempts = 0;
+            if (level > highScore) {
+                highScore = level;
+                localStorage.setItem('highScore', highScore);
+            }
             alert(`¡Correcto! Nivel ${level}`);
             renderButtons();
         }
@@ -72,11 +77,13 @@
         function renderButtons() {
             const buttonsContainer = document.getElementById('buttonsContainer');
             const levelCounter = document.getElementById('levelCounter');
+            const highScoreDisplay = document.getElementById('highScore');
             buttonsContainer.innerHTML = '';
             const numberOfButtons = 4 + Math.floor(level / 10);
             const correctButtonIndex = Math.floor(Math.random() * numberOfButtons);
  
             levelCounter.textContent = `Nivel: ${level}`;
+            highScoreDisplay.textContent = `Récord: ${highScore}`;
  
             for (let i = 0; i < numberOfButtons; i++) {
                 const button = document.createElement('button');
@@ -93,6 +100,7 @@
     <div id="gameContainer">
         <h1>¡Bienvenido al Juego de Botones!</h1>
         <div id="levelCounter">Nivel: 1</div>
+        <div id="highScore">Récord: 1</div>
         <div id="buttonsContainer"></div>
     </div>
 </body>
