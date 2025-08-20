@@ -1,107 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Botones</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(to right, #6dd5ed, #2193b0);
-        }
-        #gameContainer {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
-            color: #333;
-        }
-        #levelCounter, #highScore {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #555;
-        }
-        button {
-            width: 150px;
-            height: 50px;
-            margin: 10px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background-color: #ff9800;
-            color: white;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #e67e22;
-            transform: scale(1.1);
-        }
-    </style>
-    <script>
-        let level = 1;
-        let incorrectAttempts = 0;
-        let highScore = localStorage.getItem('highScore') || 1;
- 
-        function nextLevel() {
-            level++;
-            incorrectAttempts = 0;
-            if (level > highScore) {
-                highScore = level;
-                localStorage.setItem('highScore', highScore);
-            }
-            alert(`¡Correcto! Nivel ${level}`);
-            renderButtons();
-        }
- 
-        function incorrectAttempt() {
-            incorrectAttempts++;
-            if (incorrectAttempts === 1) {
-                alert('Has fallado una vez. Tienes una oportunidad más antes de volver al nivel 1.');
-            } else if (incorrectAttempts >= 2) {
-                alert('Has fallado dos veces seguidas. Volverás al nivel 1.');
-                level = 1;
-                incorrectAttempts = 0;
-            }
-            renderButtons();
-        }
- 
-        function renderButtons() {
-            const buttonsContainer = document.getElementById('buttonsContainer');
-            const levelCounter = document.getElementById('levelCounter');
-            const highScoreDisplay = document.getElementById('highScore');
-            buttonsContainer.innerHTML = '';
-            const numberOfButtons = 4 + Math.floor(level / 10);
-            const correctButtonIndex = Math.floor(Math.random() * numberOfButtons);
- 
-            levelCounter.textContent = `Nivel: ${level}`;
-            highScoreDisplay.textContent = `Récord: ${highScore}`;
- 
-            for (let i = 0; i < numberOfButtons; i++) {
-                const button = document.createElement('button');
-                button.textContent = `Botón ${i + 1}`;
-                button.onclick = (i === correctButtonIndex) ? nextLevel : incorrectAttempt;
-                buttonsContainer.appendChild(button);
-            }
-        }
- 
-        window.onload = renderButtons;
-    </script>
+<link rel="icon" type="image/x-icon" href="Icono.ico">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Registro de Visitas</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="gameContainer">
-        <h1>¡Bienvenido al Juego de Botones!</h1>
-        <div id="levelCounter">Nivel: 1</div>
-        <div id="highScore">Récord: 1</div>
-        <div id="buttonsContainer"></div>
-    </div>
+
+<div id="app"></div>
+
+<!-- Firebase SDKs (Compat para Firestore) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Tu app como módulo -->
+<script type="module" src="app.js"></script>
+
+
 </body>
 </html>
