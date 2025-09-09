@@ -3,12 +3,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDQktG2rLa101GPhQ_nDThdn8TLVX6e0eU",
-    authDomain: "registro-de-visitas-cb96f.firebaseapp.com",
-    projectId: "registro-de-visitas-cb96f",
-    storageBucket: "registro-de-visitas-cb96f.firebasestorage.app",
-    messagingSenderId: "996870360641",
-    appId: "1:996870360641:web:361ee827b513cf6898c0c0"
+  apiKey: "AIzaSyApNKsmMJzfsWXQpNAEnlD8wel9RJUW7F4",
+  authDomain: "registro-tifon.firebaseapp.com",
+  projectId: "registro-tifon",
+  storageBucket: "registro-tifon.firebasestorage.app",
+  messagingSenderId: "186207482498",
+  appId: "1:186207482498:web:2eb3e0771f3338ffbcfa9b"
 };
 
 // Inicializamos Firebase
