@@ -1,6 +1,6 @@
 // registroFirebase.js
 import { db } from './firebaseConfig.js';
-import { doc, collection, setDoc, addDoc, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { doc, collection, setDoc, addDoc, getDocs, Timestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 function formatearFechaId(fecha) {
     const d = new Date(fecha);
@@ -62,7 +62,7 @@ export async function cargarTodosRegistros() {
             promesas.push(
                 getDocs(subColRef).then(subColSnap => {
                     subColSnap.forEach(subDoc => {
-                        registros.push(subDoc.data());
+                        registros.push({ id: subDoc.id, fechaDoc, ...subDoc.data() });
                     });
                 })
             );
@@ -73,5 +73,37 @@ export async function cargarTodosRegistros() {
     } catch (error) {
         alert("Error al cargar registros: " + error.message);
         return [];
+    }
+}
+
+export async function actualizarRegistro(fechaDoc, idRegistro, datos) {
+    try {
+        const fechaIdNueva = formatearFechaId(datos.FechaObj);
+        const fechaVisual = formatearFechaVisual(datos.FechaObj);
+        const registroOrdenado = {
+            Fecha: fechaVisual,
+            Vendedora: datos.Vendedora,
+            Localidad: datos.Localidad || "",
+            "Visita múltiple": datos["Visita múltiple"],
+            Producto: datos.Producto,
+            Resultado: datos.Resultado,
+            FechaObj: Timestamp.fromDate(new Date(datos.FechaObj))
+        };
+
+        if (fechaIdNueva === fechaDoc) {
+            const docRef = doc(db, "visitas", fechaDoc, fechaDoc, idRegistro);
+            await updateDoc(docRef, registroOrdenado);
+        } else {
+            const oldDocRef = doc(db, "visitas", fechaDoc, fechaDoc, idRegistro);
+            await deleteDoc(oldDocRef);
+            await setDoc(doc(db, "visitas", fechaIdNueva), { fecha: fechaVisual }, { merge: true });
+            await setDoc(doc(db, "visitas", fechaIdNueva, fechaIdNueva, idRegistro), registroOrdenado);
+        }
+
+        alert("Registro actualizado correctamente.");
+        return true;
+    } catch (error) {
+        alert("Error actualizando registro: " + error.message);
+        return false;
     }
 }

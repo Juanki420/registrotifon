@@ -13,7 +13,7 @@ export function iniciarRegistro() {
 function pasoVendedora() {
     const fechaObj = new Date();
     registroActual = { FechaObj: fechaObj.toISOString() };
-    crearBotones("Selecciona la vendedora:", ["Isa", "Caty", "Maria Dolores", "Mari Huertas", "Diana", "Marisol","Sin Vendedora"], pasoLocalidad, mostrarMenu, historialPasos);
+    crearBotones("Selecciona la vendedora:", ["Diana", "Marisol", "Maria Dolores", "Mari Huertas", "Isa", "Caty","Sin Vendedora"], pasoLocalidad, mostrarMenu, historialPasos);
 }
 
 function pasoLocalidad(vendedora) {

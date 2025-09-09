@@ -1,5 +1,5 @@
 // tablaRegistros.js
-import { cargarTodosRegistros } from './registroFirebase.js';
+import { cargarTodosRegistros, actualizarRegistro } from './registroFirebase.js';
 
 let registros = [];
 let registrosFiltrados = [];
@@ -26,7 +26,7 @@ registros.sort((a, b) => {
         
         <div id="contadorRegistros" style="margin-bottom: 10px; font-size: 14px; color: #555;"></div>
 
-        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd;">
+        <div style="border: 1px solid #ddd;">
             <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;" id="tablaRegistros">
                 <thead>
                     <tr style="background: #f0f0f0;">
@@ -36,6 +36,7 @@ registros.sort((a, b) => {
                         <th>Visita múltiple</th>
                         <th>Producto</th>
                         <th>Resultado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -91,16 +92,25 @@ registrosFiltrados = registros.filter(r =>
 
 function actualizarTabla() {
     const tbody = document.querySelector("#tablaRegistros tbody");
+    const inicio = (paginaActual - 1) * registrosPorPagina;
     tbody.innerHTML = registrosFiltrados
-        .slice((paginaActual - 1) * registrosPorPagina, paginaActual * registrosPorPagina)
-        .map(r => `<tr>
+        .slice(inicio, inicio + registrosPorPagina)
+        .map((r, i) => `<tr>
             <td>${r.Fecha}</td>
             <td>${r.Vendedora}</td>
             <td>${r.Localidad || ""}</td>
             <td>${r["Visita múltiple"]}</td>
             <td>${r.Producto}</td>
             <td>${r.Resultado}</td>
+            <td><button class="editar-btn" data-index="${inicio + i}">Editar</button></td>
         </tr>`).join("");
+
+    document.querySelectorAll('.editar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const registro = registrosFiltrados[btn.dataset.index];
+            editarRegistro(registro);
+        });
+    });
 
     // Actualizar contador
     const contador = document.getElementById("contadorRegistros");
@@ -113,4 +123,45 @@ function actualizarTabla() {
     // Botones
     document.getElementById("btnPrev").disabled = paginaActual === 1;
     document.getElementById("btnNext").disabled = paginaActual >= totalPaginas;
+}
+
+function toInputDate(registro) {
+    const d = new Date(registro.FechaObj?.seconds ? registro.FechaObj.seconds * 1000 : registro.FechaObj);
+    return d.toISOString().split('T')[0];
+}
+
+function editarRegistro(registro) {
+    const appDiv = document.getElementById("app");
+    appDiv.innerHTML = `
+        <h2>Editar registro</h2>
+        <label>Fecha: <input type="date" id="editFecha" value="${toInputDate(registro)}"></label><br><br>
+        <label>Vendedora: <input type="text" id="editVendedora" value="${registro.Vendedora}"></label><br><br>
+        <label>Localidad: <input type="text" id="editLocalidad" value="${registro.Localidad || ''}"></label><br><br>
+        <label>Visita múltiple:
+            <select id="editVisita">
+                <option value="Sí"${registro["Visita múltiple"] === "Sí" ? ' selected' : ''}>Sí</option>
+                <option value="No"${registro["Visita múltiple"] === "No" ? ' selected' : ''}>No</option>
+            </select>
+        </label><br><br>
+        <label>Producto: <input type="text" id="editProducto" value="${registro.Producto}"></label><br><br>
+        <label>Resultado: <input type="text" id="editResultado" value="${registro.Resultado}"></label><br><br>
+        <button id="btnGuardarEdit">Guardar</button>
+        <button id="btnCancelarEdit">Cancelar</button>
+    `;
+
+    document.getElementById('btnGuardarEdit').onclick = async () => {
+        const nuevaFecha = new Date(document.getElementById('editFecha').value);
+        const datosActualizados = {
+            FechaObj: nuevaFecha,
+            Vendedora: document.getElementById('editVendedora').value,
+            Localidad: document.getElementById('editLocalidad').value,
+            "Visita múltiple": document.getElementById('editVisita').value,
+            Producto: document.getElementById('editProducto').value,
+            Resultado: document.getElementById('editResultado').value
+        };
+        const ok = await actualizarRegistro(registro.fechaDoc, registro.id, datosActualizados);
+        if (ok) mostrarTabla();
+    };
+
+    document.getElementById('btnCancelarEdit').onclick = () => mostrarTabla();
 }

@@ -1,0 +1,9 @@
+// Copia este archivo como env.js y rellena con tus credenciales reales
+window.env = {
+    FIREBASE_API_KEY: '',
+    FIREBASE_AUTH_DOMAIN: '',
+    FIREBASE_PROJECT_ID: '',
+    FIREBASE_STORAGE_BUCKET: '',
+    FIREBASE_MESSAGING_SENDER_ID: '',
+    FIREBASE_APP_ID: ''
+};
